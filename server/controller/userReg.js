@@ -44,7 +44,10 @@ const userReg = async (req, res) => {
         res.status(201).json({
             status : 201,
             message : 'User Created Successfully',
-            data : newUser
+            data : {
+                username,
+                email
+            }
         })
     } catch (err) {
         console.error(err.message);
