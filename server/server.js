@@ -2,8 +2,8 @@ import dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
 
-import mongodb from './config/db-config.js'
-import userAuth from './route/usersAuth.js'
+import mongodb from './src/config/db-config.js'
+import userAuth from './src/route/usersAuth.js'
 
 dotenv.config();
 const app = express();

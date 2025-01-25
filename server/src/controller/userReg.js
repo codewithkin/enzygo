@@ -5,7 +5,7 @@ import userModel from "../models/userModel.js";
 
 const userReg = async (req, res) => {
     try {
-        const { username, email, password} = req.body;
+        const { email} = req.body;
         // Validate email
         // check if username or email is in use
         const checkExists = userModel.findOne({ 
