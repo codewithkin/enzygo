@@ -20,6 +20,10 @@ const UserModel = Schema({
         required: true,
         unique: true
     },
+    profilePicture: {
+        type: String,
+        default: "https://i.pinimg.com/236x/cc/77/b3/cc77b348508729a9e6575bd4cbd2f445.jpg"
+    },
     verificationToken: {
         type: {
             token: String,
