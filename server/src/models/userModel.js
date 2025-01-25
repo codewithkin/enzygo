@@ -15,6 +15,11 @@ const UserModel = Schema({
         required : true,
         unique : true
     },
+    username: {
+        type: String,
+        required: true,
+        unique: true
+    },
     verificationToken: {
         type: {
             token: String,
