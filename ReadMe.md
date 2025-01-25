@@ -1,6 +1,6 @@
-# Enzygo - The Modern Chat Application
+# Anzygo - The Modern Chat Application
 
-Enzygo is a simple chat app that helps people connect. Users can chat with each other or join groups based on their interests. It’s fast, easy to use, and has a clean design.
+Anzygo is a simple chat app that helps people connect. Users can chat with each other or join groups based on their interests. It’s fast, easy to use, and has a clean design.
 
 ---
 
