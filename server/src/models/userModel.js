@@ -44,6 +44,13 @@ const UserModel = Schema({
         type: Array,
         default: []
     },
+    isverified: {
+        type: Boolean,
+        default: false
+    },
+    last_login : {
+        type : Date
+    },
     created_at : {
         type : Date,
         default : Date.now
