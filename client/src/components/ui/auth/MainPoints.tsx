@@ -4,30 +4,36 @@ import { ChevronLeft, ChevronRight } from "lucide-react"
 
 interface mainPoint {
     title: string,
-    description: string
+    description: string,
+    image: string
 }
 
 interface MainPointComponentProps {
     point: mainPoint
     index: number
+    image: string
 }
 
 const mainPoints: mainPoint[] = [
     {
         title: "Unbreakable Encryption",
-        description: "We use the latest encryption technology to ensure your messages are safe from prying eyes."
+        description: "We use the latest encryption technology to ensure your messages are safe from prying eyes.",
+        image: "/images/features/encryption.png"
     },
     {
         title: "Fast and Reliable",
-        description: "Our servers are fast and reliable, your messages will always be delivered quickly without latency."
+        description: "Our servers are fast and reliable, your messages will always be delivered quickly without latency.",
+        image: "/images/features/speed.png"
     },
     {
         title: "Local-first",
-        description: "Your messages are stored locally on your device, meaning you can always access them even without an internet connection."
+        description: "Your messages are stored locally on your device, meaning you can always access them even without an internet connection.",
+        image: "/images/features/storage.png"
     },
     {
         title: "Community Driven",
-        description: "Anzygo focuses on you, the community. We take your feedback seriously and are always looking to improve."
+        description: "Anzygo focuses on you, the community. We take your feedback seriously and are always looking to improve.",
+        image: "/images/features/community.png"
     }
 ]
 
@@ -62,10 +68,6 @@ export default function MainPoints () {
                 </button>
                 {
                     mainPoints.map((point: mainPoint, index: number) => {
-                        const {title, description} = point;
-
-                        console.log("Current point: ", currentPoint);
-
                         return (
                             <article className={`${index === currentPoint ? "w-2 h-2 bg-white" : "w-1 h-1 bg-gray-200" } micro-interaction rounded-full `}></article>
                         )
