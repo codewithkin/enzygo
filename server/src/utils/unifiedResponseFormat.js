@@ -13,3 +13,5 @@ export const unifiedResponse = (status, message, data) => {
         data
     }
 }
+
+export default unifiedResponse

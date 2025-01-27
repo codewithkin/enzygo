@@ -23,13 +23,18 @@ async function sendPlainTextEmail (destination, subject, text) {
     }
 }
 
-async function sendVerificationEmail (email, redirectUrl) {
+async function sendVerificationEmail (email, username, redirectUrl) {
     try {
+        const htmlContent = `
+        <h1>Welcome to Anzygo, ${username}!</h1>
+        <p>Please click the following link to verify your account:</p>
+        <a href="${redirectUrl}">Verify Account</a>
+    `;
         await transporter.sendMail({
             from: "The Anzygo Team <welcome.anzygo.online>",
             to: email,
             subject: "Verify your Anzygo account",
-            text: `Hey, Please click the following link to verify your account: ${redirectUrl}`
+            text: htmlContent
         });
     } catch (err) {
         console.error(err.message);
@@ -50,4 +55,4 @@ async function sendResetPasswordEmail (email, redirectUrl) {
         console.error(err.message);
     }
   }
-export default {sendPlainTextEmail, sendVerificationEmail};
+export {sendPlainTextEmail, sendVerificationEmail};
