@@ -3,6 +3,7 @@ import FormField from '../../components/ui/forms/FormField'
 import Label from '../../components/ui/forms/Label'
 import Input from '../../components/ui/forms/Input'
 import Button from '../../components/ui/forms/Button'
+import MainPoints from '../../components/ui/auth/MainPoints'
 
 export const Route = createFileRoute('/auth/')({
   component: RouteComponent,
@@ -10,8 +11,8 @@ export const Route = createFileRoute('/auth/')({
 
 function RouteComponent() {
   return (
-    <section className="md:h-screen md:px-10 py-20 flex flex-col md:flex-row gap-4 items-center">
-      <article className="flex flex-col gap-8 justify-center h-full">
+    <section className="md:h-screen md:px-10 py-4 flex flex-col md:flex-row gap-4 items-center">
+      <article className="flex flex-col gap-8 justify-center h-full md:w-1/2 md:px-20">
         {/* App icon and name */}
         <article className="flex gap-2 items-center">
           <h4 className='font-poppins font-semibold text-purple-600'>Anzygo</h4>
@@ -32,7 +33,9 @@ function RouteComponent() {
           <Button loadingText="Signing you in..">Sign in</Button>
         </form>
       </article>
-      <article></article>
+      <article className="bg-purple-600 px-20 text-center rounded-xl h-full md:w-1/2 flex flex-col justify-center items-center">
+        <MainPoints />
+      </article>
     </section>
   )
 }
