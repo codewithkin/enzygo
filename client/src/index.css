@@ -1,1 +1,21 @@
+/* Inter, Poppins and Roboto fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
 @import "tailwindcss";
+/* Include the custom fonts in this project */
+
+@font-face {
+    font-family: Inter, sans-serif;
+    src: url("./fonts/Inter/Inter-VariableFont_opsz,wght.ttf");
+}
+
+@font-face {
+    font-family: Poppins, sans-serif;
+    font-weight: 100 300 500 800;
+    src: url("./fonts/Poppins/Poppins-Light.ttf"), url("./fonts/Poppins/Poppins-Medium.ttf"), url("./fonts/Poppins/Poppins-Regular.ttf"), url("./fonts/Poppins/Poppins-Bold.ttf");
+}
+
+@font-face {
+    font-family: Roboto, system-ui;
+    src: url("./fonts/Roboto/Roboto-VariableFont_wdth,wght.ttf");
+}
