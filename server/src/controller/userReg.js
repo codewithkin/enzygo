@@ -4,7 +4,7 @@ import argon2 from "argon2";
 import userModel from "../models/userModel.js";
 import { unifiedResponse } from "../utils/unifiedResponseFormat.js";
 import rootUrls from "../utils/rootUrl.js";
-import {sendPlainTextEmail, sendVerificationEmail} from "../utils/sendPlainTextEmail.js";
+import { sendVerificationEmail} from "../utils/sendPlainTextEmail.js";
 import { generateVerificationToken, generateSessionToken } from "../utils/tokenGenerator.js";
 
 const userReg = async (req, res) => {
@@ -15,7 +15,6 @@ const userReg = async (req, res) => {
 
         // Expires in 3 days ( declare here to avoid repetition)
         const sessionTokenExpiration = new Date(Date.now() + 259200000);
-
 
         const { email, username, password } = req.body;
 
@@ -53,6 +52,7 @@ const userReg = async (req, res) => {
                         null
                     ))
                 }
+
                 // Generate a unique verification token
                 const hashedToken = await generateVerificationToken(email)
 
@@ -65,13 +65,11 @@ const userReg = async (req, res) => {
                 // Update the user's verification token and session
                 const updateData = {
                     verificationToken: { token: hashedToken, expires: verificationTokenExpiration },
-                }                            
-                if (userEmailExists.session.expires < Date.now()) {
-                    updateData.session = { token: sessionToken, expires: sessionTokenExpiration };
-                }
+                };
+
+                updateData.session = { token: sessionToken, expires: sessionTokenExpiration };
 
                 await userModel.updateOne({ email }, updateData);
-
 
                 // Send the verification callBackUrl to the user's email
                 // The email should contain a link to the callBackUrl
@@ -87,6 +85,7 @@ const userReg = async (req, res) => {
         }
         // Hash password
         const hashedPassword = await argon2.hash(password);
+
         // Generate a unique verification token
         const hashedToken = await generateVerificationToken(email)
 

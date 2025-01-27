@@ -50,4 +50,5 @@ async function sendResetPasswordEmail (email, redirectUrl) {
         console.error(err.message);
     }
   }
+
 export default {sendPlainTextEmail, sendVerificationEmail};
