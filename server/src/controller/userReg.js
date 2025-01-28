@@ -94,15 +94,6 @@ const userReg = async (req, res) => {
         // Save user to database
         await newUser.save();
 
-        // Send a welcome email to the user
-
-        // TODO: Send a welcome email to the user after verification
-        // sendPlainTextEmail(
-        //     email,
-        //     "Welcome to Anzygo",
-        //     "Hey, welcome to Anzygo ! Thank you for signing up with us, we're very happy to have you !"
-        // );
-
         // Send the verification callBackUrl to the user's email
         // The email should contain a link to the callBackUrl
         await sendVerificationEmail(email, username, callBackUrl)

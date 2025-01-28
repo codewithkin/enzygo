@@ -2,6 +2,7 @@ import argon2 from 'argon2'
 import userModel from "../models/userModel.js";
 import unifiedResponse from "../utils/unifiedResponseFormat.js";
 import { verifyVerificationToken, generateSessionToken } from '../utils/tokenGenerator.js';
+import { sendPlainTextEmail } from '../utils/sendPlainTextEmail.js';
 const verifyEmail= async ( req, res) => {
     try {
         const {token} = req.query
@@ -70,6 +71,14 @@ const verifyEmail= async ( req, res) => {
 
         emailVerification.session = { token: sessionHash, expires: sessionTokenExpiration}
         await emailVerification.save()
+
+        // Send a welcome email to the user after verification
+        sendPlainTextEmail(
+            emailVerification.email,
+            "Welcome to Anzygo",
+            `<h1>Hey ${emailVerification.username},</h1>
+            <p>Welcome to Anzygo ! Thank you for signing up with us, we're very happy to have you !</p>`
+            );
 
         return res.json(unifiedResponse(
             200,
