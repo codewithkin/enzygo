@@ -1,5 +1,3 @@
-import dotenv from 'dotenv'
-import crypto from 'crypto';
 import {V4} from 'paseto';
 
 const generateVerificationToken = async (verificationInfo) => {
