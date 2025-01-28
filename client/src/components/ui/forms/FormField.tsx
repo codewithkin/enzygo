@@ -5,7 +5,7 @@ interface FormFieldProps {
 
 export default function FormField ({children, className}: FormFieldProps) {
     return (
-        <div className={`${className}`}>
+        <div className={`${className} grid`}>
             {children}
         </div>
     )

@@ -6,6 +6,6 @@ interface LabelProps {
 
 export default function Label ({ htmlFor, children, className }: LabelProps) {
     return (
-        <label className={`${className}`} htmlFor={htmlFor}>{children}</label>
+        <label className={`text-sm font-medium font-inter ${className}`} htmlFor={htmlFor}>{children}</label>
     )
 }
