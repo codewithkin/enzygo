@@ -5,7 +5,14 @@
  */
 
 import { encrypt } from "./Encryption.js";
+import { hash } from "argon2";
 
-export const generateVerificationToken = async (email) => await argon2.hash(`${email}${Date.now()}`);
+export const generateVerificationToken = async (email) => {
+    return await hash(`${email}${Date.now()}`);
+}
 
-export const generateSessionToken = async (email, username) => encrypt(JSON.stringify({ email, username }));
+export const generateSessionToken = async (email, username) => {
+    const token = encrypt(JSON.stringify({ email, username }));
+
+    return token;
+};

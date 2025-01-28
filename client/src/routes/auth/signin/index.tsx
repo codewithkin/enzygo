@@ -7,10 +7,10 @@ import MainPoints from '../../../components/ui/auth/MainPoints'
 import { motion } from 'framer-motion'
 
 export const Route = createFileRoute('/auth/signin/')({
-  component: RouteComponent,
+  component: SignIn,
 })
 
-function RouteComponent() {
+function SignIn() {
   return (
     <section className="md:h-screen md:px-10 py-4 flex flex-col-reverse md:flex-row gap-4 items-center">
       <article className="flex flex-col gap-8 justify-center md:h-full md:w-1/2 md:px-20 h-screen font-inter">

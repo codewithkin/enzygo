@@ -10,7 +10,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-async function sendPlainTextEmail (destination, subject, text) {
+export async function sendPlainTextEmail (destination, subject, text) {
     try {
         await transporter.sendMail({
             from: "The Anzygo Team <welcome.anzygo.online>",
@@ -23,7 +23,7 @@ async function sendPlainTextEmail (destination, subject, text) {
     }
 }
 
-async function sendVerificationEmail (email, redirectUrl) {
+export async function sendVerificationEmail (email, redirectUrl) {
     try {
         await transporter.sendMail({
             from: "The Anzygo Team <welcome.anzygo.online>",
@@ -36,19 +36,3 @@ async function sendVerificationEmail (email, redirectUrl) {
     }
   
 }
-
-async function sendResetPasswordEmail (email, redirectUrl) {
-    try {
-        await transporter.sendMail({
-            from: "The Anzygo Team <welcome.anzygo.online>",
-            to: email,
-            subject: "Reset your Anzygo password",
-            text: `Hey, Please click the following link to reset your password: ${redirectUrl}\n
-            If you did not request this, please ignore this email and your password will remain unchanged.`
-        });
-    } catch (err) {
-        console.error(err.message);
-    }
-  }
-
-export default {sendPlainTextEmail, sendVerificationEmail};
