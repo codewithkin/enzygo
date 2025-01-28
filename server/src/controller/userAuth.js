@@ -87,18 +87,3 @@ const verifyEmail= async ( req, res) => {
     }}
 
 export default verifyEmail
-    // Expires in 3 days
-    // const sessionTokenExpiration = new Date(Date.now() + 259200000);
-
-    // Create a session token containing the user's data
-    // const sessionToken = await argon2.hash(JSON.stringify({ email, username, created_at: Date.now() }));
-
-    // Save the session token in a secure cookie
-    // res.cookie("sessionToken", 
-    //     sessionToken, 
-    //     { expires: sessionTokenExpiration, 
-    //         httpOnly: true, 
-    //         sameSite: "strict",
-    //         secure: process.env.NODE_ENV === "production" ? true : false,
-    //         domain: process.env.NODE_ENV === "production" ? ".anzygo.com" : ""
-    //     });

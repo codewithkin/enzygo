@@ -1,20 +1,15 @@
-import bcrypt from "bcrypt";
-import argon2, { argon2i } from "argon2";
-
+import argon2 from "argon2";
 import userModel from "../models/userModel.js";
 import { unifiedResponse } from "../utils/unifiedResponseFormat.js";
 import rootUrls from "../utils/rootUrl.js";
 import {sendPlainTextEmail, sendVerificationEmail} from "../utils/sendPlainTextEmail.js";
-import { generateVerificationToken, generateSessionToken } from "../utils/tokenGenerator.js";
+import { generateVerificationToken} from "../utils/tokenGenerator.js";
 
 const userReg = async (req, res) => {
     
     try {
         // Expires in 2 minutes ( declare here to avoid repetition)
         const verificationTokenExpiration = new Date(Date.now() + 120000);
-
-        // Expires in 3 days ( declare here to avoid repetition)
-        // const sessionTokenExpiration = new Date(Date.now() + 259200000);
 
         const { email, username} = req.body;
 
@@ -51,20 +46,11 @@ const userReg = async (req, res) => {
             // Specify the url the user will be redirected to upon successful verification
             const callBackUrl = `${rootUrls.frontendUrl}/verify-email?token=${verification}`;
 
-            // // Create a session token containing the user's data
-            // const sessionToken = await generateSessionToken({email: email, username: userEmailExists.username});
-
-            // // hash the session token
-            // const sessionHash = await argon2.hash(sessionToken)
-
             // Update the user's verification token and session
             const updateData = {
                 verificationToken: { token: hashedToken, expires: verificationTokenExpiration },
-            }                            
-            // if (userEmailExists.session.expires < Date.now()) {
-            //     updateData.session = { token: sessionHash, expires: sessionTokenExpiration };
-            // }
-
+            }
+            // Update the user's data in the database
             await userModel.updateOne({ email }, updateData);
 
 
@@ -72,8 +58,10 @@ const userReg = async (req, res) => {
             // The email should contain a link to the callBackUrl
             if (userEmailExists.isVerified) {
                 await sendPlainTextEmail(email,
-                    `Welcome back ${userEmailExists.username} `,
-                    `Please click the following link to verify your login: ${callBackUrl}`
+                    "Verify your Anzygo Login",
+                    `<h1>Welcome back ${userEmailExists.username}</h1>
+                    <p>Please click the following link to verify your login:</p>
+                    <a href="${callBackUrl}">Verify Login</a>`
                 )
             } else {
                 await sendVerificationEmail(email, userEmailExists.username, callBackUrl)
@@ -94,12 +82,6 @@ const userReg = async (req, res) => {
 
         // Specify the url the user will be redirected to upon successful verification
         const callBackUrl = `${rootUrls.frontendUrl}/verify-email?token=${verification}`;
-
-        // // Create a session token containing the user's data
-        // const sessionToken = await generateSessionToken({email: email, username: username});
-
-        // // hash the session token
-        // const sessionHash = await argon2.hash(sessionToken)
 
         // Create new user
         const newUser = new userModel({

@@ -1,5 +1,4 @@
-import nodemailer from "nodemailer"
-
+import nodemailer from 'nodemailer'
 const transporter = nodemailer.createTransport({
   host: "mail.spacemail.com",
   port: 465,
@@ -23,13 +22,18 @@ async function sendPlainTextEmail (destination, subject, text) {
     }
 }
 
-async function sendVerificationEmail (email, redirectUrl) {
+async function sendVerificationEmail (email, username, redirectUrl) {
     try {
+        const htmlContent = `
+        <h1>Welcome to Anzygo, ${username}!</h1>
+        <p>Please click the following link to verify your account:</p>
+        <a href="${redirectUrl}">Verify Account</a>
+    `;
         await transporter.sendMail({
             from: "The Anzygo Team <welcome.anzygo.online>",
             to: email,
             subject: "Verify your Anzygo account",
-            text: `Hey, Please click the following link to verify your account: ${redirectUrl}`
+            text: htmlContent
         });
     } catch (err) {
         console.error(err.message);
@@ -37,17 +41,22 @@ async function sendVerificationEmail (email, redirectUrl) {
   
 }
 
-async function sendResetPasswordEmail (email, redirectUrl) {
+async function sendResetPasswordEmail (email, username, redirectUrl) {
     try {
+        const htmlContent = `
+        <h1>Welcome to Anzygo, ${username}!</h1>
+        <p>Hey, Please click the following link to reset your password:</p>
+        <a href="${redirectUrl}">Reset Password</a>
+        <p>If you did not request this, please ignore this email and your password will remain unchanged.</p>
+    `;
         await transporter.sendMail({
             from: "The Anzygo Team <welcome.anzygo.online>",
             to: email,
             subject: "Reset your Anzygo password",
-            text: `Hey, Please click the following link to reset your password: ${redirectUrl}\n
-            If you did not request this, please ignore this email and your password will remain unchanged.`
+            text: htmlContent
         });
     } catch (err) {
         console.error(err.message);
     }
   }
-export default {sendPlainTextEmail, sendVerificationEmail};
+export {sendPlainTextEmail, sendVerificationEmail, sendResetPasswordEmail};
