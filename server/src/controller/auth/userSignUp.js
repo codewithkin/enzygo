@@ -26,11 +26,9 @@ export default async function userSignUp (req, res) {
     const usernameIsTaken = await userModel.findOne({ email });
 
     if(usernameIsTaken) {
-        return res.json(unifiedResponse(
-            500,
-            "Username is already taken",
-            null
-        ))
+        await userModel.deleteOne({
+            email
+        })
     }  
 
     // Send a welcome email
