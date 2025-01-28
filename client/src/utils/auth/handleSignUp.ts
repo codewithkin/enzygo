@@ -14,6 +14,8 @@ export default async function handleSignUp(formData: FormData) {
     // Make a request to the backend
     const response = await axios.post(`${rootBackendServer}/auth/signup`, { email: formData.get("email"), username: formData.get("username") });
 
+    console.log(response.data.status)
+
    if(response.data.status === 200) {
        return {
         status: "success",

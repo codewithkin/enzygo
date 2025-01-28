@@ -16,7 +16,7 @@ const transporter = nodemailer.createTransport({
 export async function sendPlainTextEmail (destination, subject, text) {
     try {
         await transporter.sendMail({
-            from: "The Anzygo Team <welcome.anzygo.online>",
+            from: "The Anzygo Team <admin@anzygo.online>",
             to: destination,
             subject,
             text
@@ -26,12 +26,12 @@ export async function sendPlainTextEmail (destination, subject, text) {
     }
 }
 
-sendPlainTextEmail("kinzinzombe07@gmail.com", "Welcome to Anzygo", "Hey, Welcome to Anzygo! We're happy to have you here !");
+sendPlainTextEmail("kinzinzombe07@gmail.com", "admin to Anzygo", "Hey, admin to Anzygo! We're happy to have you here !");
 
 export async function sendVerificationEmail (email, redirectUrl) {
     try {
         await transporter.sendMail({
-            from: "The Anzygo Team <welcome.anzygo.online>",
+            from: "The Anzygo Team <admin@anzygo.online>",
             to: email,
             subject: "Verify your Anzygo account",
             text: `Hey, Please click the following link to verify your account: ${redirectUrl}`

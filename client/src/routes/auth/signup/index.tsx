@@ -1,4 +1,4 @@
-import { createFileRoute, Link, Navigate, redirect } from '@tanstack/react-router'
+import { createFileRoute, Link, Navigate, redirect, useNavigate } from '@tanstack/react-router'
 import FormField from '../../../components/ui/forms/FormField'
 import Label from '../../../components/ui/forms/Label'
 import Input from '../../../components/ui/forms/Input'
@@ -17,6 +17,7 @@ function SignUp() {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
+  const navigate = useNavigate();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     try {
@@ -31,9 +32,11 @@ function SignUp() {
       // Make a request to the backend
       const authResponse: authResponse = await handleSignUp(formData);
 
+      console.log(authResponse.status);
+
       if (authResponse.status === "success") {
         // Redirect to the check email page (a page where the user is told to check their email)
-        return <Navigate to="/auth/check-email" />
+        return navigate({ to: "/auth/check-email" });
       }
 
       // Show a failure toast

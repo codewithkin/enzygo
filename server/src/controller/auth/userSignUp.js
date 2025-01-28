@@ -5,6 +5,8 @@ import { sendPlainTextEmail, sendVerificationEmail } from "../../utils/sendPlain
 import {unifiedResponse} from "../../utils/unifiedResponseFormat.js";
 
 export default async function userSignUp (req, res) {
+
+
     const { email, username } = req.body;
 
     // Set verification token expiration (2 minutes)
@@ -26,10 +28,14 @@ export default async function userSignUp (req, res) {
     const usernameIsTaken = await userModel.findOne({ email });
 
     if(usernameIsTaken) {
-        await userModel.deleteOne({
-            email
-        })
-    }  
+        return res.json(
+            unifiedResponse(
+                400,
+                "Username is already taken",
+                null
+            )
+        );
+    }
 
     // Send a welcome email
     await sendPlainTextEmail(
