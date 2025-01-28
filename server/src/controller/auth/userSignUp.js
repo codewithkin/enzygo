@@ -6,7 +6,6 @@ import {unifiedResponse} from "../../utils/unifiedResponseFormat.js";
 
 export default async function userSignUp (req, res) {
 
-
     const { email, username } = req.body;
 
     // Set verification token expiration (2 minutes)
@@ -25,7 +24,7 @@ export default async function userSignUp (req, res) {
     const callBackUrl = `${rootUrls.frontendUrl}/verify-email?token=${verificationToken}`;
 
     // Check if the username is taken
-    const usernameIsTaken = await userModel.findOne({ email });
+    const usernameIsTaken = await userModel.findOne({ username });
 
     if(usernameIsTaken) {
         return res.json(
