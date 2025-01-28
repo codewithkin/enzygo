@@ -11,7 +11,7 @@ function RouteComponent() {
 
   if(!session.token) {
     // Redirect to the auth page
-    return <Navigate to="/auth" />
+    return <Navigate to="/auth/signin" />
   }
 
   // Redirect to the home page

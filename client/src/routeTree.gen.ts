@@ -13,7 +13,8 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as IndexImport } from './routes/index'
 import { Route as HomeIndexImport } from './routes/home/index'
-import { Route as AuthIndexImport } from './routes/auth/index'
+import { Route as AuthSignupIndexImport } from './routes/auth/signup/index'
+import { Route as AuthSigninIndexImport } from './routes/auth/signin/index'
 
 // Create/Update Routes
 
@@ -29,9 +30,15 @@ const HomeIndexRoute = HomeIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const AuthIndexRoute = AuthIndexImport.update({
-  id: '/auth/',
-  path: '/auth/',
+const AuthSignupIndexRoute = AuthSignupIndexImport.update({
+  id: '/auth/signup/',
+  path: '/auth/signup/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AuthSigninIndexRoute = AuthSigninIndexImport.update({
+  id: '/auth/signin/',
+  path: '/auth/signin/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -46,18 +53,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/auth/': {
-      id: '/auth/'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthIndexImport
-      parentRoute: typeof rootRoute
-    }
     '/home/': {
       id: '/home/'
       path: '/home'
       fullPath: '/home'
       preLoaderRoute: typeof HomeIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/auth/signin/': {
+      id: '/auth/signin/'
+      path: '/auth/signin'
+      fullPath: '/auth/signin'
+      preLoaderRoute: typeof AuthSigninIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/auth/signup/': {
+      id: '/auth/signup/'
+      path: '/auth/signup'
+      fullPath: '/auth/signup'
+      preLoaderRoute: typeof AuthSignupIndexImport
       parentRoute: typeof rootRoute
     }
   }
@@ -67,42 +81,47 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/auth': typeof AuthIndexRoute
   '/home': typeof HomeIndexRoute
+  '/auth/signin': typeof AuthSigninIndexRoute
+  '/auth/signup': typeof AuthSignupIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/auth': typeof AuthIndexRoute
   '/home': typeof HomeIndexRoute
+  '/auth/signin': typeof AuthSigninIndexRoute
+  '/auth/signup': typeof AuthSignupIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
-  '/auth/': typeof AuthIndexRoute
   '/home/': typeof HomeIndexRoute
+  '/auth/signin/': typeof AuthSigninIndexRoute
+  '/auth/signup/': typeof AuthSignupIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/home'
+  fullPaths: '/' | '/home' | '/auth/signin' | '/auth/signup'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/home'
-  id: '__root__' | '/' | '/auth/' | '/home/'
+  to: '/' | '/home' | '/auth/signin' | '/auth/signup'
+  id: '__root__' | '/' | '/home/' | '/auth/signin/' | '/auth/signup/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AuthIndexRoute: typeof AuthIndexRoute
   HomeIndexRoute: typeof HomeIndexRoute
+  AuthSigninIndexRoute: typeof AuthSigninIndexRoute
+  AuthSignupIndexRoute: typeof AuthSignupIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AuthIndexRoute: AuthIndexRoute,
   HomeIndexRoute: HomeIndexRoute,
+  AuthSigninIndexRoute: AuthSigninIndexRoute,
+  AuthSignupIndexRoute: AuthSignupIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -116,18 +135,22 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/auth/",
-        "/home/"
+        "/home/",
+        "/auth/signin/",
+        "/auth/signup/"
       ]
     },
     "/": {
       "filePath": "index.tsx"
     },
-    "/auth/": {
-      "filePath": "auth/index.tsx"
-    },
     "/home/": {
       "filePath": "home/index.tsx"
+    },
+    "/auth/signin/": {
+      "filePath": "auth/signin/index.tsx"
+    },
+    "/auth/signup/": {
+      "filePath": "auth/signup/index.tsx"
     }
   }
 }
