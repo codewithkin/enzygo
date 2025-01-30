@@ -1,12 +1,8 @@
 import express from 'express';
-
-import userReg from '../controller/userReg.js';
-import verifyEmail from '../controller/userAuth.js';
-import {loginLimit} from '../utils/rateLimiter.js'
+import userSignUp from '../controller/auth/userSignUp.js';
 
 const router = express.Router();
 
-router.post('/register', userReg);
-router.post('/verify-email', loginLimit, verifyEmail);
+router.post('/auth/signup',userSignUp);
 
 export default router;

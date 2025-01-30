@@ -15,6 +15,7 @@ import { Route as IndexImport } from './routes/index'
 import { Route as HomeIndexImport } from './routes/home/index'
 import { Route as AuthSignupIndexImport } from './routes/auth/signup/index'
 import { Route as AuthSigninIndexImport } from './routes/auth/signin/index'
+import { Route as AuthCheckEmailIndexImport } from './routes/auth/check-email/index'
 
 // Create/Update Routes
 
@@ -42,6 +43,12 @@ const AuthSigninIndexRoute = AuthSigninIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const AuthCheckEmailIndexRoute = AuthCheckEmailIndexImport.update({
+  id: '/auth/check-email/',
+  path: '/auth/check-email/',
+  getParentRoute: () => rootRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -58,6 +65,13 @@ declare module '@tanstack/react-router' {
       path: '/home'
       fullPath: '/home'
       preLoaderRoute: typeof HomeIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/auth/check-email/': {
+      id: '/auth/check-email/'
+      path: '/auth/check-email'
+      fullPath: '/auth/check-email'
+      preLoaderRoute: typeof AuthCheckEmailIndexImport
       parentRoute: typeof rootRoute
     }
     '/auth/signin/': {
@@ -82,6 +96,7 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/home': typeof HomeIndexRoute
+  '/auth/check-email': typeof AuthCheckEmailIndexRoute
   '/auth/signin': typeof AuthSigninIndexRoute
   '/auth/signup': typeof AuthSignupIndexRoute
 }
@@ -89,6 +104,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/home': typeof HomeIndexRoute
+  '/auth/check-email': typeof AuthCheckEmailIndexRoute
   '/auth/signin': typeof AuthSigninIndexRoute
   '/auth/signup': typeof AuthSignupIndexRoute
 }
@@ -97,22 +113,35 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/home/': typeof HomeIndexRoute
+  '/auth/check-email/': typeof AuthCheckEmailIndexRoute
   '/auth/signin/': typeof AuthSigninIndexRoute
   '/auth/signup/': typeof AuthSignupIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/home' | '/auth/signin' | '/auth/signup'
+  fullPaths:
+    | '/'
+    | '/home'
+    | '/auth/check-email'
+    | '/auth/signin'
+    | '/auth/signup'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/home' | '/auth/signin' | '/auth/signup'
-  id: '__root__' | '/' | '/home/' | '/auth/signin/' | '/auth/signup/'
+  to: '/' | '/home' | '/auth/check-email' | '/auth/signin' | '/auth/signup'
+  id:
+    | '__root__'
+    | '/'
+    | '/home/'
+    | '/auth/check-email/'
+    | '/auth/signin/'
+    | '/auth/signup/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   HomeIndexRoute: typeof HomeIndexRoute
+  AuthCheckEmailIndexRoute: typeof AuthCheckEmailIndexRoute
   AuthSigninIndexRoute: typeof AuthSigninIndexRoute
   AuthSignupIndexRoute: typeof AuthSignupIndexRoute
 }
@@ -120,6 +149,7 @@ export interface RootRouteChildren {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   HomeIndexRoute: HomeIndexRoute,
+  AuthCheckEmailIndexRoute: AuthCheckEmailIndexRoute,
   AuthSigninIndexRoute: AuthSigninIndexRoute,
   AuthSignupIndexRoute: AuthSignupIndexRoute,
 }
@@ -136,6 +166,7 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/home/",
+        "/auth/check-email/",
         "/auth/signin/",
         "/auth/signup/"
       ]
@@ -145,6 +176,9 @@ export const routeTree = rootRoute
     },
     "/home/": {
       "filePath": "home/index.tsx"
+    },
+    "/auth/check-email/": {
+      "filePath": "auth/check-email/index.tsx"
     },
     "/auth/signin/": {
       "filePath": "auth/signin/index.tsx"
