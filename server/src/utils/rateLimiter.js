@@ -1,6 +1,6 @@
 import rateLimiter from 'express-rate-limit'
 
-const verifyLimit = rateLimiter({
+const limiter = rateLimiter({
     windowMs: 15 * 60 * 1000,
     max : 5,
     message : "Too many attempts, Try again after 15 minutes",
@@ -12,4 +12,4 @@ const refreshTokenLimit = rateLimiter({
     message : "Too many attempts, Try again after 5 minutes",
 })
 
-export { verifyLimit, refreshTokenLimit }
+export { limiter, refreshTokenLimit }

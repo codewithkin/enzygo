@@ -1,8 +1,8 @@
 import argon2 from 'argon2'
-import userModel from "../models/userModel.js";
-import unifiedResponse from "../utils/unifiedResponseFormat.js";
-import { verifyVerificationToken, generateSessionToken } from '../utils/tokenGenerator.js';
-import { sendPlainTextEmail } from '../utils/sendPlainTextEmail.js';
+import userModel from "../../models/userModel.js";
+import unifiedResponse from "../../utils/unifiedResponseFormat.js";
+import { verifyVerificationToken, generateSessionToken } from '../../utils/tokenGenerator.js';
+import { sendPlainTextEmail } from '../../utils/sendPlainTextEmail.js';
 const verifyEmail= async ( req, res) => {
     try {
         const {token} = req.query
@@ -60,7 +60,8 @@ const verifyEmail= async ( req, res) => {
 
         const sessionInfo = {
             email: emailVerification.email,
-            username: emailVerification.username
+            username: emailVerification.username,
+            role: emailVerification.role || 'user'
         }
         const sessionToken = await generateSessionToken(sessionInfo)
 

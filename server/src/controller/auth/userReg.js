@@ -1,9 +1,9 @@
 import argon2 from "argon2";
-import userModel from "../models/userModel.js";
-import { unifiedResponse } from "../utils/unifiedResponseFormat.js";
-import rootUrls from "../utils/rootUrl.js";
-import {sendPlainTextEmail, sendVerificationEmail} from "../utils/sendPlainTextEmail.js";
-import { generateVerificationToken} from "../utils/tokenGenerator.js";
+import userModel from "../../models/userModel.js";
+import { unifiedResponse } from "../../utils/unifiedResponseFormat.js";
+import rootUrls from "../../utils/rootUrl.js";
+import {sendPlainTextEmail, sendVerificationEmail} from "../../utils/sendPlainTextEmail.js";
+import { generateVerificationToken} from "../../utils/tokenGenerator.js";
 
 const userReg = async (req, res) => {
     
@@ -30,7 +30,7 @@ const userReg = async (req, res) => {
 
         if(userEmailExists) {
             //check if verification token has expired
-            if(userEmailExists.verificationToken?.expires > Date.now()) {
+            if(userEmailExists.verificationToken && userEmailExists.verificationToken.expires > Date.now()) {
                 return res.json(unifiedResponse(
                     409,
                     "Check your email to verify your account to continue",
@@ -56,15 +56,21 @@ const userReg = async (req, res) => {
 
             // Send the verification callBackUrl to the user's email
             // The email should contain a link to the callBackUrl
-            if (userEmailExists.isVerified) {
+            if (!userEmailExists.isVerified) {
+                await sendVerificationEmail(email, userEmailExists.username, callBackUrl)
+
+                return res.json(unifiedResponse(
+                    200,
+                    `A verification link has been sent to your email. Please check your inbox to verify your account.`,
+                    null
+                ))
+            } else {
                 await sendPlainTextEmail(email,
                     "Verify your Anzygo Login",
                     `<h1>Welcome back ${userEmailExists.username}</h1>
                     <p>Please click the following link to verify your login:</p>
                     <a href="${callBackUrl}">Verify Login</a>`
                 )
-            } else {
-                await sendVerificationEmail(email, userEmailExists.username, callBackUrl)
             }
 
             return res.json(unifiedResponse(
