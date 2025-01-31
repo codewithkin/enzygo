@@ -35,10 +35,7 @@ const UserModel = Schema({
     },
     session: {
         type: {
-            token: {
-                iv: String,
-                encryptedData: String
-            },
+            token: String,
             expires: Date,
         },
         required: true,
@@ -67,3 +64,9 @@ const UserModel = Schema({
 })
 
 export default model("User", UserModel);
+
+
+        // token: {
+        //     iv: String,
+        //     encryptedData: String
+        // },

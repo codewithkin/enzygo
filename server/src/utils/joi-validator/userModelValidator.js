@@ -6,10 +6,7 @@ const verificationTokenSchema =  joi.object({
 })
 
 const sessionSchema = joi.object({
-    token: joi.object({
-        iv: joi.string().required(),
-        encryptedData: joi.string().required(),
-    }).required(),
+    token: joi.string().required(),
     expires: joi.date().required(),
 });
 
