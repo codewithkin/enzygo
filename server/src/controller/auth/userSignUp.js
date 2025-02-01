@@ -35,6 +35,19 @@ export default async function userSignUp (req, res) {
         );
     }
 
+    // check if the user's email is taken
+    const emailIsTaken = await userModel.findOne({ email });
+
+    if(emailIsTaken) {
+        return res.json(
+            unifiedResponse(
+                400,
+                "Email is already taken",
+                null
+            )
+        )
+    }
+
     // Send a welcome email
     await sendPlainTextEmail(
         email,
@@ -49,14 +62,11 @@ export default async function userSignUp (req, res) {
     const newUser = await userModel.create({
         email,
         username,
-        verificationToken: {
-            token: verificationToken,
-            expires: verificationTokenExpiration
-        },
+        verificationToken,
         session: {
             token: sessionToken,
             expires: sessionTokenExpiration
-        }
+        },
     });
 
     res.status(200).json(

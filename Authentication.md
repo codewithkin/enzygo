@@ -22,3 +22,10 @@ When a user is first created, we take their email and them encrypt it into a ran
 After a user is successfully created, we sent a "cookie" with the "verification-key" token there. This is the random string generated before. The cookie is stored on the frontend and sent with every request 
 
 On each request, we verify the verification token, that is, we use jsonwebtoken's "verify" function compare it with the one in the database and if they match...the user can continue their request otherwise...they get a 401 Error: "Invalid token"
+
+### Session token
+The session token is special because it is an encrypted string that contains the user's email, username and other information.
+
+The reason I did this is so that we can get the user's info and display it to them on the frontend.
+
+So the frontend received the session token (string), decrypts it and displays the information (for example: their username) to them. This is the purpose of the session token.
