@@ -14,7 +14,7 @@ export default async function userSignUp (req, res) {
     const sessionTokenExpiration = Date.now() + 259200000;
 
     // Generate a verification token
-    const verificationToken = await generateVerificationToken(email);
+    const verificationToken = { token: generateVerificationToken({ email }), expires: verificationTokenExpiration }; //generateVerificationToken({ email });
 
     // Generate a session token
     const sessionToken = await generateSessionToken(email, username);

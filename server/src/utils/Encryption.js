@@ -13,6 +13,7 @@ const iv = crypto.randomBytes(16);
  * @param {String} text The text to encrypt.
  * @returns {Object} An object containing the encrypted text and the used IV.
  */
+
 function encrypt(text) {
     let cipher = crypto.createCipheriv(algorithm, key, iv);
     
@@ -28,6 +29,7 @@ function encrypt(text) {
  * @param {Object} text An object containing the encrypted text and the used IV.
  * @returns {String} The decrypted text.
  */
+
 function decrypt(text) {
     let iv = Buffer.from(text.iv, 'hex');
     let encryptedText = Buffer.from(text.encryptedData, 'hex');
