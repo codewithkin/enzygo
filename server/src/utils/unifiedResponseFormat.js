@@ -7,11 +7,13 @@
 */
 
 export const unifiedResponse = (status, message, data) => {
-    return {
+    const resData = {
         status,
         message,
         data
     }
+
+    return Object.freeze(resData);
 }
 
 export default unifiedResponse

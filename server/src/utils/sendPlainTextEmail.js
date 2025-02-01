@@ -1,8 +1,4 @@
-import { config } from "dotenv";
-import nodemailer from "nodemailer"
-
-config();
-
+import nodemailer from 'nodemailer'
 const transporter = nodemailer.createTransport({
   host: "mail.spacemail.com",
   port: 465,
@@ -13,7 +9,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-export async function sendPlainTextEmail (destination, subject, text) {
+async function sendPlainTextEmail (destination, subject, text) {
     try {
         await transporter.sendMail({
             from: "The Anzygo Team <admin@anzygo.online>",
@@ -26,9 +22,7 @@ export async function sendPlainTextEmail (destination, subject, text) {
     }
 }
 
-sendPlainTextEmail("kinzinzombe07@gmail.com", "admin to Anzygo", "Hey, admin to Anzygo! We're happy to have you here !");
-
-export async function sendVerificationEmail (email, redirectUrl) {
+async function sendVerificationEmail (email, username, redirectUrl) {
     try {
         const htmlContent = `
         <h1>Welcome to Anzygo, ${username}!</h1>
@@ -44,5 +38,6 @@ export async function sendVerificationEmail (email, redirectUrl) {
     } catch (err) {
         console.error(err.message);
     }
-  
 }
+
+export {sendPlainTextEmail, sendVerificationEmail};

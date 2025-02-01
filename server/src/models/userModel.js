@@ -31,6 +31,7 @@ const UserModel = Schema({
         },
         required: true,
         unique: true,
+        default : null
     },
     session: {
         type: {
@@ -50,6 +51,11 @@ const UserModel = Schema({
     isVerified: {
         type: Boolean,
         default: false
+    },
+    role: {
+        type: String,
+        enum: ['user', 'admin', 'super-admin'],
+        default: 'user'
     },
     last_login : {
         type : Date,

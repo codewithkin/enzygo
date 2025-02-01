@@ -7,6 +7,8 @@ import MainPoints from '../../../components/ui/auth/MainPoints'
 import { motion } from 'framer-motion'
 import handleSignUp, { authResponse } from '../../../utils/auth/handleSignUp'
 import { useState } from 'react'
+import Toast from '../../../components/ui/Toast'
+import { toast } from 'sonner'
 
 export const Route = createFileRoute('/auth/signup/')({
   component: SignUp,
@@ -14,9 +16,10 @@ export const Route = createFileRoute('/auth/signup/')({
 
 function SignUp() {
 
+  // Track loading state
   const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
 
+  // Create a navigate instance for redirecting
   const navigate = useNavigate();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -24,6 +27,7 @@ function SignUp() {
       // Show a loading spinner
       setLoading(true);
 
+      // Prevent the form from clearing after submitting
       event.preventDefault()
 
       // Create a formData object
@@ -32,15 +36,13 @@ function SignUp() {
       // Make a request to the backend
       const authResponse: authResponse = await handleSignUp(formData);
 
-      console.log(authResponse.status);
-
       if (authResponse.status === "success") {
         // Redirect to the check email page (a page where the user is told to check their email)
         return navigate({ to: "/auth/check-email" });
       }
 
-      // Show a failure toast
-      setError(authResponse.data.message);
+      // Show an error toast
+      toast.error(authResponse.data.message);
     } catch (e) {
       console.log(e)
     } finally {
@@ -121,9 +123,6 @@ function SignUp() {
               placeholder="Enter your username"
             />
           </FormField>
-          <article className={` ${error ? "block bg-red-600 px-2 py-1" : "hidden"} mt-2 rounded-md text-white`}>
-            <p>{error}</p>
-          </article>
           <Button loading={loading} loadingText="Signing you up..">Sign up</Button>
           <article className="flex items-center gap-1 my-2 text-md text-gray-400 text-regular">
             Already have an account ? <Link className='text-purple-500 font-semibold' to="/auth/signin">Sign in</Link>

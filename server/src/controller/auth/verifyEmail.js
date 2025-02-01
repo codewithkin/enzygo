@@ -1,7 +1,8 @@
 import argon2 from 'argon2'
-import userModel from "../models/userModel.js";
-import unifiedResponse from "../utils/unifiedResponseFormat.js";
-import { verifyVerificationToken, generateSessionToken } from '../utils/tokenGenerator.js';
+import userModel from "../../models/userModel.js";
+import unifiedResponse from "../../utils/unifiedResponseFormat.js";
+import { verifyVerificationToken, generateSessionToken } from '../../utils/tokenGenerator.js';
+import { sendPlainTextEmail } from '../../utils/sendPlainTextEmail.js';
 const verifyEmail= async ( req, res) => {
     try {
         const {token} = req.query
@@ -59,7 +60,8 @@ const verifyEmail= async ( req, res) => {
 
         const sessionInfo = {
             email: emailVerification.email,
-            username: emailVerification.username
+            username: emailVerification.username,
+            role: emailVerification.role || 'user'
         }
         const sessionToken = await generateSessionToken(sessionInfo)
 
@@ -70,6 +72,14 @@ const verifyEmail= async ( req, res) => {
 
         emailVerification.session = { token: sessionHash, expires: sessionTokenExpiration}
         await emailVerification.save()
+
+        // Send a welcome email to the user after verification
+        sendPlainTextEmail(
+            emailVerification.email,
+            "Welcome to Anzygo",
+            `<h1>Hey ${emailVerification.username},</h1>
+            <p>Welcome to Anzygo ! Thank you for signing up with us, we're very happy to have you !</p>`
+            );
 
         return res.json(unifiedResponse(
             200,
@@ -86,19 +96,4 @@ const verifyEmail= async ( req, res) => {
         ))
     }}
 
-export default verifyEmail
-    // Expires in 3 days
-    // const sessionTokenExpiration = new Date(Date.now() + 259200000);
-
-    // Create a session token containing the user's data
-    // const sessionToken = await argon2.hash(JSON.stringify({ email, username, created_at: Date.now() }));
-
-    // Save the session token in a secure cookie
-    // res.cookie("sessionToken", 
-    //     sessionToken, 
-    //     { expires: sessionTokenExpiration, 
-    //         httpOnly: true, 
-    //         sameSite: "strict",
-    //         secure: process.env.NODE_ENV === "production" ? true : false,
-    //         domain: process.env.NODE_ENV === "production" ? ".anzygo.com" : ""
-    //     });
+export default verifyEmail;

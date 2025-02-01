@@ -22,7 +22,6 @@
 
 @layer components {
     /* Typography */
-
     
 /* Custom Font Classes */
 .font-inter {
@@ -39,5 +38,11 @@
 
   .micro-interaction {
     @apply transition duration-300
+  }
+
+  /* Layout */
+
+  .cover-all {
+    @apply fixed w-screen h-screen right-0 bottom-0
   }
 }

@@ -1,18 +1,43 @@
-/**
- * Generates a verification token to be sent to the user's email
- * @param {string} email - The email of the user
- * @returns {string} - The verification token
- */
+import jwt from "jsonwebtoken";
+import { encrypt } from './Encryption.js';
 
-import { encrypt } from "./Encryption.js";
-import { hash } from "argon2";
+const {sign, verify} = jwt;
 
-export const generateVerificationToken = async (email) => {
-    return await hash(`${email}${Date.now()}`);
+const generateVerificationToken = (verificationInfo) => sign(verificationInfo, process.env.SECRET_KEY, {expiresIn: '120000'});
+
+
+const generateSessionToken = async (email, username, created_at=Date.now()) => {
+    // Create a session token containing the email, username, and creation timestamp
+    // return await argon2.hash(JSON.stringify({ email, username, created_at}));
+
+    // Get the user's session info
+    const sessionInfo = {
+        email,
+        username,
+        created_at,
+    }
+
+    // Encrypt the user's session info
+    return encrypt(JSON.stringify(sessionInfo))
 }
 
-export const generateSessionToken = async (email, username) => {
-    const token = encrypt(JSON.stringify({ email, username }));
+const verifyVerificationToken = async (verificationToken) => {
+    if (!verificationToken){
+        throw new Error('No verification token Provided')
+    }
 
-    return token;
-};
+    try {
+        const verification = verify(verificationToken, process.env.SECRET_KEY);
+
+        if (verification) {
+            return verification
+        } else {
+            throw new Error('Verification token not valid')
+        }
+    } catch (err) {
+        console.error(err)
+        throw new Error('invalid verification token')
+    }
+}
+
+export { generateVerificationToken, generateSessionToken, verifyVerificationToken };
