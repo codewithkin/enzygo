@@ -5,7 +5,6 @@ import { sendPlainTextEmail, sendVerificationEmail } from "../../utils/sendPlain
 import {unifiedResponse} from "../../utils/unifiedResponseFormat.js";
 
 export default async function userSignUp (req, res) {
-
     const { email, username } = req.body;
 
     // Set verification token expiration (2 minutes)

@@ -1,7 +1,7 @@
 import express from 'express';
-import verifyEmail from '../controller/auth/userAuth.js'
+import verifyEmail from '../controller/auth/verifyEmail.js'
 import { limiter } from '../utils/rateLimiter.js'
-import userSignUp from '../controller/auth/userReg.js';
+import userSignUp from '../controller/auth/userSignUp.js';
 
 const router = express.Router();
 

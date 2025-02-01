@@ -96,4 +96,4 @@ const verifyEmail= async ( req, res) => {
         ))
     }}
 
-export default verifyEmail
+export default verifyEmail;

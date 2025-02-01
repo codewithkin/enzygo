@@ -9,7 +9,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-export async function sendPlainTextEmail (destination, subject, text) {
+async function sendPlainTextEmail (destination, subject, text) {
     try {
         await transporter.sendMail({
             from: "The Anzygo Team <admin@anzygo.online>",
