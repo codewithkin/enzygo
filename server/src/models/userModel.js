@@ -31,13 +31,11 @@ const UserModel = Schema({
         },
         required: true,
         unique: true,
+        default : null
     },
     session: {
         type: {
-            token: {
-                iv: String,
-                encryptedData: String
-            },
+            token: String,
             expires: Date,
         },
         required: true,
@@ -51,6 +49,11 @@ const UserModel = Schema({
         type: Boolean,
         default: false
     },
+    role: {
+        type: String,
+        enum: ['user', 'admin', 'super-admin'],
+        default: 'user'
+    },
     last_login : {
         type : Date,
     },
@@ -61,3 +64,9 @@ const UserModel = Schema({
 })
 
 export default model("User", UserModel);
+
+
+        // token: {
+        //     iv: String,
+        //     encryptedData: String
+        // },
