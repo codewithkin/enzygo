@@ -16,9 +16,16 @@ const groupSchema = new Schema({
         required : true,
         unique : true
     },
+    roomName : {
+        type: String,
+        required : true,
+        unique : true,
+        trim: true
+    },
     description : {
         type : String,
-        required : true
+        required : true,
+        trim : true,
     },
     members : {
         type : Array,

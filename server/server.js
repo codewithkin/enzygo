@@ -6,13 +6,14 @@ import mongodb from './src/config/db-config.js'
 import userAuth from './src/route/usersAuth.js'
 import chatRoute from './src/route/chatRoute.js'
 import http from 'http';
-import { server} from 'socket.io'
+import { socketConfig } from './src/socket/socketServer.js';
 
 
 dotenv.config();
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server);
+socketConfig(server);
+
 mongodb()
 
 

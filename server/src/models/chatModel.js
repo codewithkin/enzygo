@@ -13,6 +13,10 @@ const chatSchema = new Schema({
         required: true,
         unique: true
     },
+    message : {
+        type : String,
+        required: true,
+    },
     otherUserId: {
         type: String,
         required: true,

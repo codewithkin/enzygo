@@ -1,4 +1,4 @@
-import chatModel from "../models/chatModel";
+import chatModel from "../../models/chatModel.js";
 import unifiedResponse from "../../utils/unifiedResponseFormat.js";
 
 const getChats = async (req, res) => {
