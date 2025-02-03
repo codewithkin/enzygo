@@ -1,4 +1,5 @@
 import {Schema, model} from "mongoose";
+import validator from "validator";
 
 // Code explanation
 /**
@@ -12,42 +13,60 @@ import {Schema, model} from "mongoose";
 const UserModel = Schema({
     email : {
         type : String,
-        required : true,
-        unique : true
+        required : [true, "Email is required"],
+        unique : true,
+        lowercase : true,
+        trim: true,
+        validate : {
+            validator: (email) => validator.isEmail(email), 
+            message: "Invalid email format"
+        }
     },
     username: {
         type: String,
-        required: true,
-        unique: true
+        required: [true, "Username is required"],
+        unique: true,
+        trim: true,
+        minlength: [3, "Username must be at least 3 characters long"],
+        maxlength: [20, "Username must be at most 20 characters long"],
+        validate: {
+            validator: (value) => /^(?![-_])(?!(.*[-_].*){2})[a-zA-Z0-9_-]+$/.test(value),
+            message: "Username must be alphanumeric and can contain underscores and hyphens but cannot start or end with them"     
+        }
     },
     profilePicture: {
         type: String,
-        default: "https://i.pinimg.com/236x/cc/77/b3/cc77b348508729a9e6575bd4cbd2f445.jpg"
+        default: "https://i.pinimg.com/236x/cc/77/b3/cc77b348508729a9e6575bd4cbd2f445.jpg",
+        validate: {
+            validator: (url) => validator.isURL(url, { protocols: ['https'], require_protocol: true }),
+            message: "Invalid URL. Must be a valid HTTPS link."
+        }
     },
     verificationToken: {
-        type: {
-            token: String,
-            expires: Date,
-        },
-        required: true,
-        unique: true,
-        default : null
+        token: {type: String, unique:true},
+        expires: {type: Date},
+        required: [true, "Verification token is required"]
     },
     session: {
-        type: {
-            token: {
-                iv: String,
-                encryptedData: String
+        token: {
+                iv: {type: String},
+                encryptedData: {type: String}
             },
-            expires: Date,
+        expires: {type: Date},
+        required: [true, "Session token is required"]
+    },
+    chats: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Chat',
         },
-        required: true,
-        unique: true,
-    },
-    chats: {
-        type: Array,
-        default: []
-    },
+    ],
+    groups: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Group',
+        }
+    ],
     isVerified: {
         type: Boolean,
         default: false
@@ -59,11 +78,8 @@ const UserModel = Schema({
     },
     last_login : {
         type : Date,
+        default: null
     },
-    created_at : {
-        type : Date,
-        default : Date.now
-    }
-})
+}, {timestamps: {createdAt: "created_at", updatedAt: "updated_at"}});
 
 export default model("User", UserModel);
