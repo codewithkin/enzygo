@@ -10,8 +10,8 @@
 
 
 import {Schema, model} from "mongoose";
-import validator from "validator";
-import { V4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
+import validator from 'validator';
 
 const groupSchema = new Schema({
     roomId : {
@@ -19,10 +19,7 @@ const groupSchema = new Schema({
         required : [true, "Room ID is required"],
         unique : true,
         trim : true,
-        validate :{
-            validator: (id) => /^[a-zA-Z0-9_- ]+$/.test(id),
-            message: "Room ID must be alphanumeric"
-        }
+        default: () => uuidv4()
     },
     roomName : {
         type: String,
@@ -30,8 +27,8 @@ const groupSchema = new Schema({
         unique : true,
         trim: true,
         validate : {
-            validator: (name) => /^[a-zA-Z0-9 ]+$/.test(name),
-            message: "Room name must be alphanumeric and can contain spaces"
+            validator: (name) => /^[a-zA-Z0-9 _-]+$/.test(name),
+            message:  "Room name must be alphanumeric and can contain spaces, underscores, or hyphens"
         },
         lowercase: true,
         maxLength: [50, "Room name must be less than 50 characters"],
@@ -42,17 +39,12 @@ const groupSchema = new Schema({
         required : [true, "Description is required"],
         trim : true,
         maxLength: [200, "Description must be less than 200 characters"],
-        minLength: [10, "Description must be at least 3 characters"]
+        minLength: [10, "Description must be at least 10 characters"]
     },
     members :[
         {
             type: Schema.Types.ObjectId, 
             ref: 'User',
-            required : [true, "Members list cannot be empty"],
-            validate : {
-                validator: (members) => members.length > 0,
-                message: "Group must have at least one member"
-            }
         }
     ],
     tags : {
@@ -64,13 +56,22 @@ const groupSchema = new Schema({
         ref: 'User',
         required : [true, "Creator information is required"]
     }
-}, {timestamps: {createdAt: "created_at", updatedAt: "updated_at"}})
+}, {timestamps: true})
+
+groupSchema.index({ description: 'text'})
+groupSchema.index({ createdBy: -1 });
+groupSchema.index({ members: 1 });
+groupSchema.index({ tags: 'text' });
 
 groupSchema.pre('save', function (next) {
-    if(!this.roomId) {
-        this.roomId = uuidv4();
+    try {
+        if(!this.members.includes(this.createdBy)) {
+            this.members.push(this.createdBy)
+        }
+        next()
+    } catch (error) {
+        next(error)
     }
-    next();
 })
 
 

@@ -6,6 +6,7 @@
 */
 
 import mongoose, {Schema, model} from "mongoose";
+import validator from "validator";
 
 const chatSchema = new Schema({
     roomId : {
@@ -25,6 +26,26 @@ const chatSchema = new Schema({
         required: [true, "Message must have a sender"],
         ref: 'User'
     },
+    recipientId: {
+        type: Schema.Types.ObjectId,
+        required: function () {
+            // recipientId is required only for private chats
+            return this.chatType === 'private';
+        },
+        ref: 'User',
+        validate : {
+            validator: function (value) {
+                return this.chatType === 'private' ? !!value : true; // recipientId is not required for group chats
+            },
+            message: 'Recipient ID is required for private chat'
+        }
+    },
+    chatType: {
+        type: String,
+        enum: ['private', 'group'],
+        required: true,
+        default: 'private'  // default is private chat type if not provided
+    },
     groupId: {
         type: Schema.Types.ObjectId,
         default: null, // default is null because the chat might not be in a group
@@ -36,22 +57,32 @@ const chatSchema = new Schema({
     }
 })
 
-chatSchema.index({ roomId: 1, createdAt: 1, senderId: 1 });
+chatSchema.index({ message: 'text' });
+chatSchema.index({ roomId: 1, createdAt: -1 });
+chatSchema.index({ createdAt: -1 });
+chatSchema.index({ senderId: 1, recipientId: 1 });
 
 chatSchema.pre('save', async function(next){
-    if(this.groupId && !this.roomId) {
-        const Group = mongoose.model('Group');
-        const group = await Group.findById(this.groupId);
-        if(group) {
-            this.roomId = group.roomId;
-        } else {
-            throw new Error('Group not found');
+    try {
+        if(this.chatType === 'group' && this.groupId && !this.roomId) {
+            const Group = mongoose.model('Group');
+            const group = await Group.findById(this.groupId);
+            if(group) {
+                this.roomId = group.roomId;
+            } else {
+                throw new Error('Group not found');
+            }
+        } else if(this.chatType === 'private' && !this.roomId) {
+            if (!this.recipientId) {
+                throw new Error('Recipient ID is required for private chat');
+            }
+            const privateMessageId = [this.senderId.toString(), this.recipientId.toString()].sort().join('_')
+            this.roomId = privateMessageId;
         }
-    } else if(!this.groupId && !this.roomId) {
-        const privateMessageId = [this.senderId, Date.now()].join('_')
-        this.roomId = privateMessageId;
+        next()
+    } catch (error) {
+        next(error);
     }
-    next();
 })
 
 export default model("chat", chatSchema);
