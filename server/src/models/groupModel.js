@@ -9,9 +9,9 @@
 */
 
 
-import {Schema, model} from "mongoose";
+import mongoose, {Schema, model} from "mongoose";
 import { v4 as uuidv4 } from 'uuid';
-import validator from 'validator';
+import Chat from './chatModel.js'
 
 const groupSchema = new Schema({
     roomId : {
@@ -24,10 +24,14 @@ const groupSchema = new Schema({
     roomName : {
         type: String,
         required : [true, "Room name is required"],
-        unique : true,
         trim: true,
+        type: {
+            type: String,
+            enum: ['public', 'private'],
+            default: 'public'
+        },
         validate : {
-            validator: (name) => /^[a-zA-Z0-9 _-]+$/.test(name),
+            validator: (name) => /^[\p{L}\p{N} _-]+$/u.test(name),
             message:  "Room name must be alphanumeric and can contain spaces, underscores, or hyphens"
         },
         lowercase: true,
@@ -47,10 +51,22 @@ const groupSchema = new Schema({
             ref: 'User',
         }
     ],
+    admins : [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'User',
+        }
+    ],
     tags : {
         type: [ String],
         default : [],
     },
+    pendingRequests : [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'User',
+        }
+    ],
     createdBy : {
         type : Schema.Types.ObjectId,
         ref: 'User',
@@ -73,6 +89,20 @@ groupSchema.pre('save', function (next) {
         next(error)
     }
 })
+
+groupSchema.pre('deleteOne', async function (next) {
+    try {
+        const filter = this.getFilter()
+        const id = filter._id
+        if (!id) {
+            return next(new Error('No group id provided'))
+        }
+        await Chat.deleteMany({ groupId: id })
+        next()
+    } catch (error) {
+        next(error)
+    }
+} )
 
 
 export default model("group", groupSchema);

@@ -5,8 +5,8 @@
     @param {Date} createdAt - The time the first message was sent i.e when the chat was started
 */
 
-import mongoose, {Schema, model} from "mongoose";
-import validator from "validator";
+import {Schema, model} from "mongoose";
+import Group from './groupModel.js'
 
 const chatSchema = new Schema({
     roomId : {
@@ -19,7 +19,7 @@ const chatSchema = new Schema({
         required: [true, "Message is required"],
         trim: true,
         minLength: [1, "Message must be at least 1 character"],
-        maxlength: [1000, "Message must be less than 1000 characters"]
+        maxlength: [5000, "Message must be less than 5000 characters"]
     },
     senderId: {
         type: Schema.Types.ObjectId,
@@ -51,11 +51,21 @@ const chatSchema = new Schema({
         default: null, // default is null because the chat might not be in a group
         ref: 'Group'
     },
-    createdAt: {
-        type: Date,
-        default: Date.now
-    }
-})
+    status: {
+        type: String,
+        enum: ['pending', 'delivered', 'read'],
+        default: 'pending',
+        index: true
+      },
+    deliveredTo: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }],
+    readBy: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }]
+}, {timestamps: true})
 
 chatSchema.index({ message: 'text' });
 chatSchema.index({ roomId: 1, createdAt: -1 });
@@ -65,7 +75,6 @@ chatSchema.index({ senderId: 1, recipientId: 1 });
 chatSchema.pre('save', async function(next){
     try {
         if(this.chatType === 'group' && this.groupId && !this.roomId) {
-            const Group = mongoose.model('Group');
             const group = await Group.findById(this.groupId);
             if(group) {
                 this.roomId = group.roomId;

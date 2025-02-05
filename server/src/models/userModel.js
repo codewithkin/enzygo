@@ -66,6 +66,10 @@ const UserModel = Schema({
             ref: 'Chat',
         },
     ],
+    isActive: {
+        type: Boolean,
+        default: false,
+    },
     groups: [
         {
             type: Schema.Types.ObjectId,
