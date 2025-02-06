@@ -81,8 +81,9 @@ groupSchema.index({ tags: 'text' });
 
 groupSchema.pre('save', function (next) {
     try {
-        if(!this.members.includes(this.createdBy)) {
+        if(!this.members.includes(this.createdBy) && !this.admins.includes(this.createdBy)) {
             this.members.push(this.createdBy)
+            this.admins.push(this.createdBy)
         }
         next()
     } catch (error) {
