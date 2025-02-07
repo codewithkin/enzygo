@@ -5,39 +5,60 @@ export const groupEvents = (socket, io) => {
     socket.on('request-join-group', async function({userId, groupId}) {
         try {
             if (!(userId || groupId)) {
-                return socket.emit('error', 'Invalid request! Please enter user ID and group ID');
+                return socket.emit('error',{
+                    type: "validation",
+                    message: 'User ID and Group ID are required'
+                });
             }
             
-            const groupExisted = await groupModel.findById(groupId);
+            const groupExisted = await groupModel.findById(groupId)
+                .populate('members', '_id username')
+                .populate("admins", '_id username')
             
             if (!groupExisted) {
-                return socket.emit('error', 'Group not found');
+                return socket.emit('error', {
+                    type: "not_found",
+                    message: 'Group not found'
+                });
             }
             
             if (groupExisted.type === 'public') {
+                if (groupExisted.members.some(m => m._id.toString() === userId)) {
+                    return socket.emit('error', {
+                        type: "already_memeber",
+                        message: 'You are already a member of this group'
+                })
+            }
                 // add user to group
                 const groupUpdate = await groupModel.findByIdAndUpdate(
                     groupId,
                     { $addToSet: { members: userId } },
                     { new: true }
                 )
-                socket.username = groupUpdate.members.find(member => member._id.toString() === userId).username
+                const username = groupUpdate.members.find(member => member._id.toString() === userId)?.username
                 // broadcast to all users in the group
                 io.to(groupId).emit('new-member', {
                     userId,
-                    username: socket.username
+                    username,
+                    groupId,
+                    groupName: groupUpdate.roomName,
+                    timestamp: new Date()
                 });
 
                 // broadcast to joined users
                 socket.emit('join-sucess', {
                     groupId,
-                    groupName: groupUpdate.roomName
+                    groupName: groupUpdate.roomName,
+                    timestamp: new Date()
                 })
 
             } else if (groupExisted.type === 'private') {
-                if (groupExisted.members.includes(userId)) {
-                    return socket.emit('error', 'You are already a member of this group');
-                }
+                if (groupExisted.members.some(m => m._id.toString() === userId)) {
+                    return socket.emit('error', {
+                        type: 'Already a member',
+                        message: 'You are already a member of this group'
+                });
+            }
                 if (groupExisted.pendingRequests.includes(userId)) {
                     return socket.emit('error', 'You have already requested to join this group');
                 }
@@ -51,7 +72,7 @@ export const groupEvents = (socket, io) => {
 
                 // send notification to the group admin
                 const admins = groupExisted.admins
-                io.to(admins.map(admin => admin)).emit('new-jpin-request', {
+                io.to(admins.map(admin => admin.)).emit('new-join-request', {
                     userId,
                     username: socket.username,
                     groupId,
